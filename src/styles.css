@@ -1,0 +1,20 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/*@tailwind base;
+@tailwind components;
+@tailwind utilities;*/
+
+
+@layer base{
+    body{
+        color:gray;
+    }
+    .table-cell {
+        @apply md:px-6 md:py-3;
+    }
+    
+}
+
+

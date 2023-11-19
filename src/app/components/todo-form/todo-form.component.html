@@ -1,0 +1,31 @@
+    <div class="flex items-center space-x-5 p-6">
+        <img src="../../../assets/peng.png" alt="ping" class="max-w-[80px]">
+        <span class="text-3xl text-navy font-bold py-3">
+            Todo App
+        </span>
+    </div>       
+       <form  (ngSubmit)="addTodo()" class="md:w-4/5  lg:w-1/2 flex flex-col space-y-4">   
+           <div class="mt-2">
+            <input 
+                [(ngModel)]="newTodoTitle"
+                name="title"
+                class="rounded-lg shadow-lg w-full p-3 my-3" 
+                placeholder="Write Todos here"/>
+           </div>
+         
+     <div class="mt-2">
+        <input 
+        type="date"
+        [(ngModel)]="newTodoDeadline"
+        name="deadline"
+        class="rounded-lg shadow-lg w-full p-3 my-3" />
+     </div>
+       
+           <div class="w-full flex justify-end">
+            <button type="submit"
+           class="p-5 text-white  rounded-lg bg-blue shadow-md hover:shadow-xl"> Add todo</button>   
+           </div>
+       
+       </form>
+
+     
