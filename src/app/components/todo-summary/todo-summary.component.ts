@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Todo } from '../../Models/todo';
-import { TodoService } from '../../services/todo.service';
 
 @Component({
   selector: 'app-todo-summary',
@@ -10,19 +9,20 @@ import { TodoService } from '../../services/todo.service';
 export class TodoSummaryComponent implements OnInit{
   @Input() todos:Todo[]=[];
   
-  constructor(private todoService:TodoService){}
+  constructor(){}
 
   ngOnInit(): void {
     
   }
  getTotal(){
-  return this.todoService.getTotal();
+  return this.todos.length;
  }
-getCompleted(){
-  return this.todoService.getCompleted();
+ getCompleted(): number {
+  return this.todos.filter(todo => todo.completed).length;
 }
-getPending(){
-  return this.todoService.getPending();
+
+getPending(): number {
+  return this.todos.filter(todo => !todo.completed).length;
 }
 
 }

@@ -3,7 +3,7 @@ import { Todo } from '../Models/todo';
 import { MessageService } from './message.service';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -24,13 +24,17 @@ export class TodoService {
   httpOptions={
     headers:new HttpHeaders({'Content-Type':'application/json'})
   }
+  
   getTodos(): Observable<Todo[]> {
     return this.http.get<Todo[]>(this.todosUrl)
       .pipe(
-        tap(_ => this.log('fetched todos')),
+        tap(todos => {
+          this.log('fetched todos');
+          this.todos = todos; 
+          console.log(this.todos); 
+        }),
         catchError(this.handleError<Todo[]>('getTodos', []))
       );
-      console.log(this.todos);
   }
   
 
@@ -59,22 +63,31 @@ getTodo(id: number): Observable<Todo> {
 }
 
 
-  addTodo(newTodo:Todo):Observable<Todo>{
-    return this.http.post<Todo>(this.todosUrl, newTodo, this.httpOptions).pipe(
-      tap((todo:Todo)=>this.log(`added todo id=${todo.id}`)),
-      catchError(this.handleError<Todo>('addTodo'))
-    );
-   
-  }
+addTodo(newTodo: Todo): Observable<Todo> {
+  return this.http.post<Todo>(this.todosUrl, newTodo, this.httpOptions).pipe(
+    tap((todo: Todo) => {
+      this.todos.push(todo); 
+      this.log(`added todo id=${todo.id}`);
+    }),
+    catchError(this.handleError<Todo>('addTodo'))
+  );
+}
 
-  
-  toggleTodo(todoId:number):Observable<any>{
-    const url = `${this.todosUrl}/${todoId}/toggle`;
-    return this.http.put(url, {}, this.httpOptions).pipe(
-      tap(() => this.log(`toggled todo id=${todoId}`)),
-      catchError(this.handleError('toggleTodo'))
-    );
+
+toggleTodo(todoId: number): Observable<any> {
+  const todo = this.todos.find(t => t.id === todoId);
+  if (!todo) {
+    return throwError(() => new Error('Todo not found'));
   }
+  todo.completed = !todo.completed;
+
+  return this.http.put(`${this.todosUrl}/${todoId}`, todo, this.httpOptions).pipe(
+    tap(() => this.log(`toggled todo id=${todoId}`)),
+    catchError(this.handleError('toggleTodo'))
+  );
+}
+
+
 
   deleteTodo(todoId:number):Observable<any>{
     const url = `${this.todosUrl}/${todoId}`;
