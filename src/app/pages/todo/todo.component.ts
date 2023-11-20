@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Todo } from '../../Models/todo';
-import { StorageService } from '../../services/local-storage.service';
 import { TodoService } from '../../services/todo.service';
 
 @Component({
@@ -14,14 +13,15 @@ export class TodoComponent implements OnInit {
 
   constructor( private todoService:TodoService){}
 
-  ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
+  ngOnInit():void{
+    this.getTodos();
   }
-
-  handleNewTodo(newTodo: Todo) {
-    this.todoService.addTodo(newTodo); 
-    this.todos = this.todoService.getTodos(); 
-    console.log('todo added:', newTodo);
+  getTodos(): void {
+    this.todoService.getTodos().subscribe(todos => this.todos = todos);
+   
+  }
+  onTodoAdded(newTodo: Todo):void {
+  this.todos.push(newTodo);
   }
   
 

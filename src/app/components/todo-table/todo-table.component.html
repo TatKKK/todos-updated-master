@@ -14,7 +14,7 @@
                 <td class="table-cell">{{todo.deadline}}</td>
                 <td class="table-cell text-center"> <input type="checkbox" [checked]="todo.completed" (click)="toggleTodo(todo.id)"></td>
                 <td lass="table-cell">
-                    <a href="#" (click)="deleteTodo(todo.id); $event.preventDefault()" class="text-center">Delete</a> 
+                    <a href="#" (click)="deleteTodo(todo); $event.preventDefault()" class="text-center">Delete</a> 
                 </td>
             </tr>
         </tbody>

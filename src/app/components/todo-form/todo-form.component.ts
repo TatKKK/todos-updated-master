@@ -8,12 +8,12 @@ import { TodoService } from '../../services/todo.service';
   styleUrl: './todo-form.component.css'
 })
 export class TodoFormComponent {
-  
   newTodoTitle:string="";
   newTodoDeadline:string="";
 
-constructor(private todoService:TodoService){}
+  @Output() todoAdded=new EventEmitter<Todo>();
 
+constructor(private todoService:TodoService){}
 
   addTodo():void{
 
@@ -21,11 +21,11 @@ constructor(private todoService:TodoService){}
 
   const currentDate=new Date().toISOString().split('T')[0];
      if(new Date(this.newTodoDeadline)<new Date(currentDate)){
-        console.log('error');
+        console.log('Invalid date');
      return;
       }
   if(!this.newTodoTitle.trim()){
-      console.log('error');
+      console.log('error: title is required field');
       return;
     }
   if(!this.newTodoDeadline){
@@ -40,12 +40,17 @@ constructor(private todoService:TodoService){}
     deadline:this.newTodoDeadline,
     completed:false
   }
-  console.log('Child-dan notify rom axali todoa',newTodo);
   
- this.todoService.addTodo(newTodo);
+ this.todoService.addTodo(newTodo).subscribe({
+  next:(todo)=>{
+    this.todoAdded.emit(todo);
+  },
+  error:(error)=>{
+    console.log('errorrr')
+  }
+ });
 // Reset
 this.newTodoTitle = '';
 this.newTodoDeadline = '';
-
 }
 }
